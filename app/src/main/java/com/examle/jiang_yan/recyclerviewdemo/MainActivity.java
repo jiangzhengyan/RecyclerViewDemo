@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         tv_empty = (TextView) findViewById(R.id.tv_empty);
         sfl = (SwipeRefreshLayout) findViewById(R.id.sfl);
         //设置刷新圈的颜色,三种
-        sfl.setColorSchemeColors(Color.RED, Color.YELLOW, Color.BLACK);
+        sfl.setColorSchemeColors(Color.RED, Color.YELLOW, Color.BLACK,Color.BLUE,Color.GREEN);
         //给recyclerView设置显示方式  单排-双排-瀑布等
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
