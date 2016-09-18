@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
      * 初始化数据,填充到list集合中的数据
      */
     private void initData() {
-        for (int i = 0; i < 23; i++) {
+        for (int i = 0; i < 20; i++) {
             list.add("这是第" + i + "条数据");
         }
     }
@@ -85,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
      * 上拉加载更多数据
      */
     private void initMoreData() {
-        for (int i = 0; i < 11; i++) {
-            moreData.add("这是上拉加载的第" + i + "条数据");
+        for (int i = 0; i < 4; i++) {
+            moreData.add("这是上拉加载的新的第" + i + "条数据");
         }
     }
 
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         //设置数据
         myAdapter.setData(list);
         mRecyclerView.setAdapter(myAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //设置显示状态
         if (list.isEmpty()) {
@@ -136,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         //1秒后停止转圈
                         sfl.setRefreshing(false);
                     }
-                }, 1000);
+                }, 2000);
             }
         });
 
@@ -155,22 +157,23 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "lastVisibleItemPosition: " + lastVisibleItemPosition + "itemCount:" + itemCount);
                     if (lastVisibleItemPosition == itemCount - 1) {
                         isLoading = true;
-                        Log.e(TAG, "onScrolled:  islooading " + myAdapter.getItemCount()
-                        );
+                        Log.e(TAG, "onScrolled:  islooading " +itemCount+"=lastVisibleItemPosition"+lastVisibleItemPosition);
+                        list.add(null);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isLoading) {
+                                    list.remove(list.size() - 1);//移除刷新的脚
+                                    //加载更多数据
+                                    list.addAll(list.size(), moreData);
+                                    myAdapter.notifyDataSetChanged();
+                                    isLoading = false;
+                                }
+                            }
+                        }, 2000);
                     }
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isLoading) {
-                                list.remove(list.size() - 1);//移除刷新的脚
-                                //加载更多数据
-                                list.addAll(list.size(), moreData);
-                                myAdapter.notifyDataSetChanged();
-                                isLoading = false;
-                            }
-                        }
-                    }, 2000);
+
                 }
             });
 
@@ -232,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 if (((MyViewHolder) holder).tvName != null)
                     ((MyViewHolder) holder).tvName.setText(mData.get(position));
             } else if (holder instanceof MyProgressViewHolder) {
+                Log.e(TAG, "MyProgressViewHolder " );
                 if (((MyProgressViewHolder) holder).pb != null)
                     ((MyProgressViewHolder) holder).pb.setIndeterminate(true);
             }
@@ -255,7 +259,8 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         public int getItemViewType(int position) {
-            return mData != null ? VIEW_ITEM : VIEW_PROG;
+            Log.e("getItemViewType", "getI  "+mData.get(position) );
+            return mData.get(position) != null ? VIEW_ITEM : VIEW_PROG;
         }
 
         /**
