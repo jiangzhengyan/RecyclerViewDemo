@@ -11,12 +11,12 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sfl"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/mRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             >
